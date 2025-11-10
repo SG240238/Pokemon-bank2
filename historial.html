@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pago de Servicios - Banco Pokémon</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/servicios.css">
+  <style>
+    header {
+      background: #2d2d2d;
+      padding: 20px 0;
+      text-align: center;
+      color: white;
+    }
+    .main-historial-ancho {
+      max-width: 1100px;
+      width: 100%;
+      margin: 40px auto 0 auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      padding: 32px 24px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png"
+        style="width:100px; height:100px;">
+    <h2>Pokémon Bank</h2>
+    <p>Bienvenido: Usuario de Prueba | Cuenta: 1234567890</p>
+
+    <nav>
+      <a class="text-white mx-3" href="menu.html">Menu</a>
+      <a class="text-white mx-3" href="deposito.html">Depósito</a>
+      <a class="text-white mx-3" href="retiro.html">Retirar</a>
+      <a class="text-white mx-3" href="consulta.html">Consulta</a>
+      <a class="text-white mx-3" href="servicios.html">Pago de Servicios</a>
+      <a class="text-white mx-3" href="historial.html">Historial</a>
+      <a class="text-white mx-3" href="grafico.html">Análisis Gráfico</a>
+      <a class="text-white mx-3" href="index.html">Salir</a>
+    </nav>
+  </header>
+  <main class="container main-historial-ancho">
+    <h3 class="mb-4 text-center">Historial de Transacciones</h3>
+    <div class="table-responsive">
+      <table class="table table-striped table-hover align-middle" id="tablaTransacciones">
+        <thead class="table-dark">
+          <tr>
+            <th>Fecha</th>
+            <th class="d-none d-md-table-cell">Tipo de movimiento</th>
+            <th>Descripción</th>
+            <th>Monto</th>
+            <th>Saldo Disponible</th>
+            <th>Número de Referencia</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="modal fade" id="modalComprobante" tabindex="-1" aria-labelledby="modalComprobanteLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalComprobanteLabel">Comprobante de Movimiento</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body" id="detalleComprobante">
+            <!-- Detalle generado dinámicamente -->
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="btnDescargarPDF">Descargar Comprobante</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="js/bank.js"></script>
+  <script>
+    let movimientos = {};
+    let comprobanteActual = null;
+
+    // Formato de fecha dd/MM/yyyy
+    function formatearFecha(fechaStr) {
+      const fecha = new Date(fechaStr);
+      const dia = String(fecha.getDate()).padStart(2, '0');
+      const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+      const anio = fecha.getFullYear();
+      return `${dia}/${mes}/${anio}`;
+    }
+
+    // Formato de dinero
+    function formatarDinero(monto) {
+      return Number(monto).toLocaleString("es-ES", {
+        style: "currency",
+        currency: "USD"
+      });
+    }
+
+    // Cargar transacciones desde localStorage
+    function cargarTransacciones() {
+      const user = cargar();
+      const tbody = document.querySelector('#tablaTransacciones tbody');
+      tbody.innerHTML = ''; // Limpiar tabla
+
+      if (!user.transacciones || user.transacciones.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center">No hay transacciones registradas</td></tr>';
+        return;
+      }
+
+      let saldoCalculado = user.saldo;
+      
+      // Recorrer transacciones en orden inverso (más recientes primero)
+      user.transacciones.slice().reverse().forEach((trans) => {
+        const fechaFormato = formatearFecha(trans.fecha);
+        const montoFormato = formatarDinero(trans.monto);
+        
+        // Calcular saldo anterior a la transacción
+        const saldoAnterior = saldoCalculado + (trans.tipo === 'Depósito' || trans.tipo === 'Consulta' ? trans.monto : -trans.monto);
+        saldoCalculado = saldoAnterior;
+        
+        const fila = document.createElement('tr');
+        fila.innerHTML = `
+          <td>${fechaFormato}</td>
+          <td class="d-none d-md-table-cell">${trans.tipo}</td>
+          <td>${trans.descripcion}</td>
+          <td>${montoFormato}</td>
+          <td>${formatarDinero(saldoCalculado)}</td>
+          <td><a href="#" class="link-primary" onclick="mostrarComprobante('${trans.referencia}')">${trans.referencia}</a></td>
+        `;
+        tbody.appendChild(fila);
+      });
+
+      // Guardar movimientos para uso en modal
+      user.transacciones.forEach((trans) => {
+        movimientos[trans.referencia] = {
+          fecha: formatearFecha(trans.fecha),
+          tipo: trans.tipo,
+          descripcion: trans.descripcion,
+          monto: trans.monto,
+          saldo: user.saldo,
+          referencia: trans.referencia,
+          detalle: `Transacción de tipo ${trans.tipo}. Referencia: ${trans.referenciaServicio}. Monto: ${formatarDinero(trans.monto)}.`
+        };
+      });
+    }
+
+    function mostrarComprobante(ref) {
+      const mov = movimientos[ref];
+      if (!mov) return;
+      
+      comprobanteActual = mov;
+      document.getElementById('detalleComprobante').innerHTML = `
+        <strong>Fecha:</strong> ${mov.fecha}<br>
+        <strong>Tipo:</strong> ${mov.tipo}<br>
+        <strong>Descripción:</strong> ${mov.descripcion}<br>
+        <strong>Monto:</strong> ${formatarDinero(mov.monto)}<br>
+        <strong>Saldo Disponible:</strong> ${formatarDinero(mov.saldo)}<br>
+        <strong>Número de Referencia:</strong> ${mov.referencia}<br>
+        <hr>
+        <strong>Detalle:</strong> ${mov.detalle}
+      `;
+      var modal = new bootstrap.Modal(document.getElementById('modalComprobante'));
+      modal.show();
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      cargarTransacciones();
+      
+      document.getElementById('btnDescargarPDF').addEventListener('click', function() {
+        if (!comprobanteActual) return;
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        doc.setFontSize(16);
+        doc.text('Comprobante de Movimiento', 10, 20);
+        doc.setFontSize(12);
+        doc.text(`Fecha: ${comprobanteActual.fecha}`, 10, 35);
+        doc.text(`Tipo: ${comprobanteActual.tipo}`, 10, 45);
+        doc.text(`Descripción: ${comprobanteActual.descripcion}`, 10, 55);
+        doc.text(`Monto: ${formatarDinero(comprobanteActual.monto)}`, 10, 65);
+        doc.text(`Saldo Disponible: ${formatarDinero(comprobanteActual.saldo)}`, 10, 75);
+        doc.text(`Número de Referencia: ${comprobanteActual.referencia}`, 10, 85);
+        doc.text('----------------------------------------', 10, 95);
+        doc.text(`Detalle: ${comprobanteActual.detalle}`, 10, 105, { maxWidth: 180 });
+        doc.save(`Comprobante_${comprobanteActual.referencia}.pdf`);
+      });
+    });
+  </script>
+
+  <footer class="text-center mt-5">
+    Pokémon Bank S.A. de C.V. © 2025<br>
+    Atención al cliente: 800-123-4567 | contacto@pokemonbank.com<br>
+    Todos los derechos reservados.
+  </footer>
+</body>
+</html>

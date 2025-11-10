@@ -1,0 +1,48 @@
+/* Estilos generales para Pokemon Bank */
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Estilo para las tarjetas */
+.card {
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    border: none;
+}
+
+/* Estilo para los botones */
+.btn {
+    border-radius: 25px;
+    padding: 12px 30px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* Logo principal */
+.pokemon-logo {
+    font-size: 4em;
+    margin-bottom: 20px;
+}
+
+/* Títulos en blanco */
+.text-white-shadow {
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Ajustes para móviles */
+@media (max-width: 768px) {
+    .pokemon-logo {
+        font-size: 3em;
+    }
+}
