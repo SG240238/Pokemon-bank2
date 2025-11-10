@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Depositos Pokémon Bank</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #333;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      padding: 20px 0 0 0;
+    }
+
+    .text-white-shadow {
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .navbar-nav .nav-link {
+      color: white !important;
+      font-weight: bold;
+      transition: color 0.3s ease;
+    }
+
+    .navbar-nav .nav-link:hover {
+      color: #ffd700 !important;
+    }
+
+    main {
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .depositosBox {
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 600px;
+      text-align: center;
+    }
+
+    .depositosBox input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid gainsboro;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+
+    .depositosBox button {
+      background-color: #667eea;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 25px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.3s ease;
+    }
+
+    .depositosBox button:hover {
+      background-color: #5a67d8;
+    }
+
+    footer {
+      background-color: #333;
+      color: white;
+      text-align: center;
+      padding: 20px 10px;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container text-center">
+      <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png"
+        alt="Pikachu"
+        style="width: 120px; height: 120px; filter: drop-shadow(0 0 20px rgba(255,255,255,0.5));" />
+      <h1 class="text-white-shadow">Pokémon Bank</h1>
+      <p style="color: white;">
+        <strong>Bienvenido:</strong> Usuario de Prueba<br />
+        <small>Cuenta: 1234567890</small>
+      </p>
+    </div>
+
+    <nav class="navbar navbar-expand-lg">
+      <div class="container-fluid justify-content-center">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu"
+          aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-center" id="navbarMenu">
+          <ul class="navbar-nav">
+            <li class="nav-item"><a class="nav-link" href="menu.html">Menu</a></li>
+            <li class="nav-item"><a class="nav-link" href="deposito.html">Deposito</a></li>
+            <li class="nav-item"><a class="nav-link" href="retiro.html">Retirar</a></li>
+            <li class="nav-item"><a class="nav-link" href="consulta.html">Consulta de Saldo</a></li>
+            <li class="nav-item"><a class="nav-link" href="pago de Servicios.html">Pago de Servicios</a></li>
+            <li class="nav-item"><a class="nav-link" href="historial.html">Historial</a></li>
+            <li class="nav-item"><a class="nav-link" href="analisis.html">Analisis Grafico</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="depositosBox card">
+      <h1>Bienvenido al área de depósitos</h1>
+      <br />
+      <h3>En esta sección podrás realizar depósitos a tu cuenta bancaria.</h3>
+      <br />
+      <!-- Formulario de depósito: captura número de cuenta y monto -->
+      <form id="depositForm">
+        <label for="accountNumber">Número de Cuenta:</label>
+        <input type="text" id="accountNumber" name="accountNumber" required />
+
+        <label for="depositAmount">Monto a Depositar:</label>
+        <input type="number" id="depositAmount" name="depositAmount" required />
+
+        <button type="submit">Depositar</button>
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    Pokémon Bank S.A. de C.V. © 2025<br />
+    Atención al cliente: 800-123-4567 | contacto@pokemonbank.com<br />
+    Todos los derechos reservados.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Evento de envío del formulario de deposito
+    // Valida el monto, registra la transacción y muestra confirmación con SweetAlert
+    document.getElementById("depositForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const cuenta = document.getElementById("accountNumber").value.trim();
+      const monto = parseFloat(document.getElementById("depositAmount").value);
+      const fecha = new Date().toLocaleString();
+      const tipo = "Depósito";
+
+      if (!cuenta || isNaN(monto) || monto <= 0) {
+        // Validación del monto ingresado
+        // Evita depositos nulos o negativos
+        Swal.fire("Error", "Por favor ingresa un número de cuenta y monto válidos.", "error");
+        return;
+      }
+
+      const transaccion = { tipo, cuenta, monto, fecha };
+      // Registro de la transacción en LocalStorage
+      // Permite generar historial y comprobantes posteriores
+      let historial = JSON.parse(localStorage.getItem("comprobantes")) || [];
+      historial.push(transaccion);
+      localStorage.setItem("comprobantes", JSON.stringify(historial));
+
+      Swal.fire({  // Confirmación con SweetAlert y opción de imprimir comprobante
+        title: 'Depósito exitoso',
+        text: '¿Desea imprimir su comprobante?',
+        icon: 'success',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, imprimir',
+        cancelButtonText: 'No'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          generarPDF(transaccion);
+        }
+      });
+    });
+
+    // Función para generar el PDF del comprobante de depósito
+    // Incluye tipo de operación, cuenta, monto y fecha
+    function generarPDF({ tipo, cuenta, monto, fecha }) {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      doc.setFontSize(16);
+      doc.text("Comprobante de Transacción", 20, 20);
+      doc.setFontSize(12);
+      doc.text(`Tipo: ${tipo}`, 20, 40);
+      doc.text(`Número de Cuenta: ${cuenta}`, 20, 50);
+      doc.text(`Monto Depositado: $${monto.toFixed(2)}`, 20, 60);
+      doc.text(`Fecha: ${fecha}`, 20, 70);
+
+      doc.save(`Comprobante_Deposito_${fecha.replace(/[: ]/g, "_")}.pdf`);
+    }
+  </script>
+</body>
+</html>
