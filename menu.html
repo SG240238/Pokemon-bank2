@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon Bank. - Menú Principal</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- CSS DIRECTO -->
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .card {
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            border: none;
+        }
+        .btn {
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .pokemon-logo {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        .text-white-shadow {
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row min-vh-100 align-items-center justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6">
+                
+                <!-- Encabezado -->
+                <div class="text-center mb-4">
+    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png" 
+         alt="Pikachu" 
+         style="width: 120px; height: 120px; filter: drop-shadow(0 0 20px rgba(255,255,255,0.5));">
+    <h1 class="text-white-shadow">Pokémon Bank</h1>
+                    <p style="color: white;">
+                        <strong>Bienvenido:</strong> Usuario de Prueba<br>
+                        <small>Cuenta: 1234567890</small>
+                    </p>
+                </div>
+
+                <!-- Tarjeta con opciones del menú -->
+                <div class="card">
+                    <div class="card-body p-4">
+                        <h3 class="text-center mb-4">Seleccione una Operación</h3>
+                        
+                        <!-- Grid de botones -->
+                        <div class="row g-3">
+                            
+                            <!-- Depósito -->
+                            <div class="col-12 col-md-6">
+                                <a href="deposito.html" class="btn btn-success w-100 py-3">
+                                    <div class="h1 mb-0">💰</div>
+                                    <div>Depósito</div>
+                                </a>
+                            </div>
+                            
+                            <!-- Retiro -->
+                            <div class="col-12 col-md-6">
+                                <a href="retiro.html" class="btn btn-warning w-100 py-3">
+                                    <div class="h1 mb-0">💵</div>
+                                    <div>Retiro</div>
+                                </a>
+                            </div>
+                            
+                            <!-- Consulta de Saldo -->
+                            <div class="col-12 col-md-6">
+                                <a href="consulta.html" class="btn btn-info w-100 py-3 text-white">
+                                    <div class="h1 mb-0">💳</div>
+                                    <div>Consulta de Saldo</div>
+                                </a>
+                            </div>
+                            
+                            <!-- Pago de Servicios -->
+                            <div class="col-12 col-md-6">
+                                <a href="servicios.html" class="btn btn-primary w-100 py-3">
+                                    <div class="h1 mb-0">📱</div>
+                                    <div>Pago de Servicios</div>
+                                </a>
+                            </div>
+                            
+                            <!-- Historial -->
+                            <div class="col-12 col-md-6">
+                                <a href="historial.html" class="btn btn-secondary w-100 py-3">
+                                    <div class="h1 mb-0">📋</div>
+                                    <div>Historial</div>
+                                </a>
+                            </div>
+                            
+                            <!-- Gráfico de Análisis -->
+                            <div class="col-12 col-md-6">
+                                <a href="grafico.html" class="btn btn-dark w-100 py-3">
+                                    <div class="h1 mb-0">📊</div>
+                                    <div>Análisis Gráfico</div>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- Separador -->
+                        <hr class="my-4">
+                        
+                        <!-- Botón de salir -->
+                        <div class="d-grid">
+                            <a href="index.html" class="btn btn-danger btn-lg">
+                                🚪 Cerrar Sesión
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Información adicional -->
+                <div class="text-center mt-3">
+                    <small style="color: white;">
+                        Horario de atención: Lunes a Viernes 8:00 AM - 6:00 PM
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

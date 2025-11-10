@@ -22,12 +22,35 @@
       box-shadow: 0 4px 24px rgba(0,0,0,0.08);
       padding: 32px 24px;
     }
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+    footer {
+      background: #333; /* amarillo de Bootstrap ‘warning’ */
+      color: white; /* texto oscuro para buen contraste */
+      text-align: center;
+      padding: 15px 0;
+      font-size: 0.9rem;
+      margin-top: auto;
+    }
+    footer a {
+      color: #ffd700;
+      text-decoration: underline;
+    }
+    footer a:hover {
+      color: #000;
+      text-decoration: none;
+    }
   </style>
 </head>
 <body>
   <header>
     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png"
-        style="width:100px; height:100px;">
+        style="width:100px; height:100px;" alt="Pikachu">
     <h2>Pokémon Bank</h2>
     <p>Bienvenido: Usuario de Prueba | Cuenta: 1234567890</p>
 
@@ -79,6 +102,10 @@
     </div>
   </main>
 
+  <footer>
+    Pokémon Bank S.A. de C.V. © 2025 — Atención: <a href="tel:800-123-4567">800-123-4567</a> | <a href="mailto:contacto@pokemonbank.com">contacto@pokemonbank.com</a>
+  </footer>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="js/bank.js"></script>
@@ -86,7 +113,6 @@
     let movimientos = {};
     let comprobanteActual = null;
 
-    // Formato de fecha dd/MM/yyyy
     function formatearFecha(fechaStr) {
       const fecha = new Date(fechaStr);
       const dia = String(fecha.getDate()).padStart(2, '0');
@@ -95,7 +121,6 @@
       return `${dia}/${mes}/${anio}`;
     }
 
-    // Formato de dinero
     function formatarDinero(monto) {
       return Number(monto).toLocaleString("es-ES", {
         style: "currency",
@@ -103,11 +128,10 @@
       });
     }
 
-    // Cargar transacciones desde localStorage
     function cargarTransacciones() {
       const user = cargar();
       const tbody = document.querySelector('#tablaTransacciones tbody');
-      tbody.innerHTML = ''; // Limpiar tabla
+      tbody.innerHTML = '';
 
       if (!user.transacciones || user.transacciones.length === 0) {
         tbody.innerHTML = '<tr><td colspan="6" class="text-center">No hay transacciones registradas</td></tr>';
@@ -115,16 +139,14 @@
       }
 
       let saldoCalculado = user.saldo;
-      
-      // Recorrer transacciones en orden inverso (más recientes primero)
+
       user.transacciones.slice().reverse().forEach((trans) => {
         const fechaFormato = formatearFecha(trans.fecha);
         const montoFormato = formatarDinero(trans.monto);
-        
-        // Calcular saldo anterior a la transacción
+
         const saldoAnterior = saldoCalculado + (trans.tipo === 'Depósito' || trans.tipo === 'Consulta' ? trans.monto : -trans.monto);
         saldoCalculado = saldoAnterior;
-        
+
         const fila = document.createElement('tr');
         fila.innerHTML = `
           <td>${fechaFormato}</td>
@@ -137,7 +159,6 @@
         tbody.appendChild(fila);
       });
 
-      // Guardar movimientos para uso en modal
       user.transacciones.forEach((trans) => {
         movimientos[trans.referencia] = {
           fecha: formatearFecha(trans.fecha),
@@ -154,7 +175,7 @@
     function mostrarComprobante(ref) {
       const mov = movimientos[ref];
       if (!mov) return;
-      
+
       comprobanteActual = mov;
       document.getElementById('detalleComprobante').innerHTML = `
         <strong>Fecha:</strong> ${mov.fecha}<br>
@@ -172,7 +193,7 @@
 
     document.addEventListener('DOMContentLoaded', function() {
       cargarTransacciones();
-      
+
       document.getElementById('btnDescargarPDF').addEventListener('click', function() {
         if (!comprobanteActual) return;
         const { jsPDF } = window.jspdf;
@@ -192,11 +213,5 @@
       });
     });
   </script>
-
-  <footer class="text-center mt-5">
-    Pokémon Bank S.A. de C.V. © 2025<br>
-    Atención al cliente: 800-123-4567 | contacto@pokemonbank.com<br>
-    Todos los derechos reservados.
-  </footer>
 </body>
 </html>

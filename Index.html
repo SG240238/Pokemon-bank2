@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon Bank - Inicio de Sesión</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .card {
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            border: none;
+        }
+        .btn {
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .pokemon-logo {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        .text-white-shadow {
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row min-vh-100 align-items-center justify-content-center">
+            <div class="col-12 col-md-5 col-lg-4">
+
+                <div class="text-center mb-4">
+                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png"
+                         alt="Pikachu"
+                         style="width: 120px; height: 120px; filter: drop-shadow(0 0 20px rgba(255,255,255,0.5));">
+                    <h1 class="text-white-shadow">Pokémon Bank.</h1>
+                    <p class="text-white" style="color: white;">Sistema de Cajero Automático</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-body p-5">
+                        <h4 class="text-center mb-4">Bienvenido</h4>
+
+                        <form id="loginForm">
+
+
+                            <div class="mb-4">
+                                <label for="pin" class="form-label">PIN de Seguridad:</label>
+                                <input
+                                    type="password"
+                                    class="form-control form-control-lg text-center"
+                                    id="pin"
+                                    maxlength="4"
+                                    placeholder="••••"
+                                    required>
+                                <small class="text-muted">Ingrese su PIN de 4 dígitos</small>
+                            </div>
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    Ingresar al Sistema
+                                </button>
+                            </div>
+                        </form>
+
+                        <div class="text-center mt-4">
+                            <small class="text-muted">
+                                ¿Olvidó su PIN? Contacte a su sucursal
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <small style="color: white;">
+                        © 2024 Pokémon Bank - Todos los derechos reservados<br>
+                        Versión 1.0 - DAW901
+                    </small>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Incluir SweetAlert -->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<script>
+// Datos fijos del usuario
+const USUARIO = {
+  pin: "1234"
+};
+const MAX_INTENTOS = 3;
+
+// Inicializa contador de intentos si no existe
+if (!localStorage.getItem("pkbank_intentos")) {
+  localStorage.setItem("pkbank_intentos", "0");
+}
+
+const form = document.getElementById("loginForm");
+form.addEventListener("submit", function(event) {
+  event.preventDefault();
+
+  const pinInput = document.getElementById("pin").value.trim();
+  let intentos = parseInt(localStorage.getItem("pkbank_intentos"), 10);
+
+  if (intentos >= MAX_INTENTOS) {
+    swal({
+      title: "Acceso bloqueado",
+      text: "Ha excedido el número de intentos permitidos.",
+      icon: "error",
+      button: "Aceptar"
+    });
+    return;
+  }
+
+  if (pinInput === USUARIO.pin) {
+    localStorage.setItem("pkbank_intentos", "0");
+    swal({
+      title: "¡Bienvenido!",
+      text: "PIN correcto. Accediendo al menú.",
+      icon: "success",
+      button: "Continuar"
+    }).then(() => {
+      window.location.href = "menu.html";
+    });
+  } else {
+    intentos++;
+    localStorage.setItem("pkbank_intentos", intentos.toString());
+    swal({
+      title: "PIN incorrecto",
+      text: `Intento ${intentos} de ${MAX_INTENTOS}.`,
+      icon: "error",
+      button: "Reintentar"
+    });
+    if (intentos >= MAX_INTENTOS) {
+      swal({
+        title: "Acceso bloqueado",
+        text: "Ha excedido el número de intentos permitidos.",
+        icon: "error",
+        button: "Aceptar"
+      });
+    }
+  }
+});
+
+// ==============================
+// RESET del bloqueo manual:
+// este código puedes comentarlo/descomentar cuando necesites reiniciar el estado.
+// ==============================
+function resetBloqueo() {
+  localStorage.removeItem("pkbank_intentos");
+  console.log("Contador de intentos reseteado.");
+}
+// resetBloqueo();
+</script>
+
+</body>
+</html>

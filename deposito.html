@@ -1,122 +1,202 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Depósito | Pokémon Bank</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Depósitos Pokémon Bank</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     body {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
-      font-family: 'Segoe UI', sans-serif;
       display: flex;
       flex-direction: column;
       margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     header {
-      background: #2d2d2d;
-      padding: 20px 0;
-      text-align: center;
+      background-color: #333;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      padding: 20px 0 0 0;
+    }
+
+    .text-white-shadow {
       color: white;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
 
-    .tarjeta {
-      background: white;
-      width: 60%;
-      max-width: 800px;
-      margin: 40px auto;
-      padding: 40px;
-      border-radius: 20px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    .navbar-nav .nav-link {
+      color: white !important;
+      font-weight: bold;
+      transition: color 0.3s ease;
+    }
+
+    .navbar-nav .nav-link:hover {
+      color: #ffd700 !important;
+    }
+
+    main {
+      flex: 1; /* para que main ocupe espacio restante */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .depositosBox {
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      width: 100%;
+      max-width: 600px;
       text-align: center;
     }
 
-    .tarjeta input {
+    .depositosBox input {
       width: 100%;
-      padding: 12px;
-      margin-top: 10px;
-      border-radius: 10px;
-      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid gainsboro;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+
+    .depositosBox button {
+      background-color: #667eea;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 25px;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      transition: background-color 0.3s ease;
+    }
+
+    .depositosBox button:hover {
+      background-color: #5a67d8;
     }
 
     footer {
-      margin-top: auto;
-      background: #2d2d2d;
+      background-color: #333;
       color: white;
       text-align: center;
-      padding: 15px 0;
+      padding: 20px 10px;
       font-size: 0.9rem;
     }
-
-    .btn-custom {
-      background: #11cdef;
-      border-radius: 10px;
-      padding: 12px;
-      font-weight: bold;
-      width: 100%;
-      border: none;
-      color: black;
-      font-size: 1.1rem;
-      transition: 0.3s;
+    footer a {
+      color: #ffd700;
+      text-decoration: underline;
     }
-
-    .btn-custom:hover {
-      background: #0bb8d4;
+    footer a:hover {
+      color: #fff;
+      text-decoration: none;
     }
   </style>
 </head>
-
 <body>
+  <header>
+    <div class="container text-center">
+      <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png"
+           alt="Pikachu"
+           style="width: 120px; height: 120px; filter: drop-shadow(0 0 20px rgba(255,255,255,0.5));" />
+      <h1 class="text-white-shadow">Pokémon Bank</h1>
+      <p style="color: white;">
+        <strong>Bienvenido:</strong>Ash Ketchum<br />
+        <small>Cuenta: 0987654321</small>
+      </p>
+    </div>
+    <nav class="navbar navbar-expand-lg">
+      <div class="container-fluid justify-content-center">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu"
+          aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-center" id="navbarMenu">
+          <ul class="navbar-nav">
+            <li class="nav-item"><a class="nav-link" href="menu.html">Menu</a></li>
+            <li class="nav-item"><a class="nav-link" href="deposito.html">Depósito</a></li>
+            <li class="nav-item"><a class="nav-link" href="retiro.html">Retirar</a></li>
+            <li class="nav-item"><a class="nav-link" href="consulta.html">Consulta de Saldo</a></li>
+            <li class="nav-item"><a class="nav-link" href="servicios.html">Pago de Servicios</a></li>
+            <li class="nav-item"><a class="nav-link" href="historial.html">Historial</a></li>
+            <li class="nav-item"><a class="nav-link" href="analisis.html">Análisis Gráfico</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
 
-<header>
-  <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png"
-       style="width:100px; height:100px;">
-  <h2>Pokémon Bank</h2>
-  <p>Bienvenido: Usuario de Prueba | Cuenta: 1234567890</p>
+  <main>
+    <div class="depositosBox card">
+      <h1>Bienvenido al área de depósitos</h1>
+      <br />
+      <h3>En esta sección podrás realizar depósitos a tu cuenta bancaria.</h3>
+      <br />
+      <!-- Formulario de depósito: captura número de cuenta y monto -->
+      <form id="depositForm">
+        <label for="accountNumber">Número de Cuenta:</label>
+        <input type="text" id="accountNumber" name="accountNumber" required />
 
-  <nav>
-    <a class="text-white mx-3" href="menu.html">Menu</a>
-    <a class="text-white mx-3" href="deposito.html">Depósito</a>
-    <a class="text-white mx-3" href="retiro.html">Retirar</a>
-    <a class="text-white mx-3" href="consulta.html">Consulta</a>
-    <a class="text-white mx-3" href="servicios.html">Pago de Servicios</a>
-    <a class="text-white mx-3" href="historial.html">Historial</a>
-    <a class="text-white mx-3" href="grafico.html">Análisis Gráfico</a>
-    <a class="text-white mx-3" href="index.html">Salir</a>
-  </nav>
-</header>
+        <label for="depositAmount">Monto a Depositar:</label>
+        <input type="number" id="depositAmount" name="depositAmount" required />
 
-<div class="tarjeta">
-  <h1>Realizar <strong>depósito</strong></h1>
-  <p>Ingresa el monto que deseas depositar.</p>
+        <button type="submit">Depositar</button>
+      </form>
+    </div>
+  </main>
 
-  <label>Monto a depositar:</label>
-  <input type="number" id="monto" placeholder="0.00" min="0" step="0.01">
+  <footer>
+    Pokémon Bank S.A. de C.V. © 2025 — Atención: <a href="tel:800-123-4567">800-123-4567</a> | <a href="mailto:contacto@pokemonbank.com">contacto@pokemonbank.com</a>
+  </footer>
 
-  <h4 class="mt-3">Saldo Actual: <span id="saldo">$0.00</span></h4>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.getElementById("depositForm").addEventListener("submit", function (e) {
+      e.preventDefault();
 
-  <button id="btnDepositar" class="btn-custom mt-4">Depositar</button>
-</div>
+      const cuenta = document.getElementById("accountNumber").value.trim();
+      const monto = parseFloat(document.getElementById("depositAmount").value);
+      const fecha = new Date().toLocaleString();
+      const tipo = "Depósito";
 
-<!-- Librerías -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/validate.js/0.13.1/validate.min.js"></script>
+      if (!cuenta || isNaN(monto) || monto <= 0) {
+        Swal.fire("Error", "Por favor ingresa un número de cuenta y monto válidos.", "error");
+        return;
+      }
 
-<!-- Script Principal -->
-<script src="js/bank.js"></script>
+      const transaccion = { tipo, cuenta, monto, fecha };
+      let historial = JSON.parse(localStorage.getItem("comprobantes")) || [];
+      historial.push(transaccion);
+      localStorage.setItem("comprobantes", JSON.stringify(historial));
 
-<script>
-  transacciones.render();
-  document.getElementById("btnDepositar")
-          .addEventListener("click", () => transacciones.deposito());
-</script>
-
-<footer>
-  Pokémon Bank S.A. de C.V. © 2025 — Atención: 800-123-4567 | contacto@pokemonbank.com
-</footer>
-
+      Swal.fire({
+        title: 'Depósito exitoso',
+        text: '¿Desea imprimir su comprobante?',
+        icon: 'success',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, imprimir',
+        cancelButtonText: 'No'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const { jsPDF } = window.jspdf;
+          const doc = new jsPDF();
+          doc.setFontSize(16);
+          doc.text("Comprobante de Transacción", 20, 20);
+          doc.setFontSize(12);
+          doc.text(`Tipo: ${tipo}`, 20, 40);
+          doc.text(`Número de Cuenta: ${cuenta}`, 20, 50);
+          doc.text(`Monto Depositado: $${monto.toFixed(2)}`, 20, 60);
+          doc.text(`Fecha: ${fecha}`, 20, 70);
+          doc.save(`Comprobante_Deposito_${fecha.replace(/[: ]/g, "_")}.pdf`);
+        }
+      });
+    });
+  </script>
 </body>
 </html>
